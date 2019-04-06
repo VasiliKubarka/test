@@ -1,0 +1,48 @@
+<mat-form-field [formGroup]="formGroup"
+                fxFlex>
+
+  <!-- TODO: fix mask for number. Number should not has mask -->
+  <ng-container [ngSwitch]="canHasMask">
+    <input matInput *ngSwitchCase="false"
+           #input="matInput"
+           [maxlength]="maxlength"
+           [errorStateMatcher]="matcher"
+           [type]="type"
+           [name]="name"
+           [min]="min"
+           [max]="max"
+           [formControlName]="name"
+           (blur)="blur.emit($event)"
+           [placeholder]="placeholder + (required ? ' *' : '')">
+
+    <input matInput *ngSwitchDefault
+           #input="matInput"
+           [maxlength]="maxlength"
+           [errorStateMatcher]="matcher"
+           [mask]="mask || defaultMaskForCurrentType"
+           [type]="type"
+           [name]="name"
+           [min]="min"
+           [max]="max"
+           [formControlName]="name"
+           (blur)="blur.emit($event)"
+           [placeholder]="placeholder + (required ? ' *' : '')">
+  </ng-container>
+
+  <svg-icon *ngIf='iconUrl'
+            matPrefix
+            [src]="iconUrl">
+  </svg-icon>
+
+  <mat-hint *ngIf="maxlength && showMaxLength"
+            align="end">{{input.value?.length || 0}}/{{ maxlength }}</mat-hint>
+  <mat-hint *ngIf="hint"
+            align="start">{{ hint }}</mat-hint>
+  <mat-error>
+    <app-input-errors [formGroup]="formGroup"
+                      [control]="control"
+                      [placeholder]="placeholder"
+                      [formErrors]="formErrors">
+    </app-input-errors>
+  </mat-error>
+</mat-form-field>

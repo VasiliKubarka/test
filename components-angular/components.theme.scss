@@ -1,0 +1,12 @@
+@import "./organisms/header/header.component.theme";
+@import "./organisms/sidebar/sidebar.component.theme";
+@import "./molecules/data-distributor/data-distributor-box/data-distributor-box.component.theme";
+@import "./molecules/inputs/switch-text/switch-text.component.theme.scss";
+
+@mixin shared-components-theme($theme) {
+  @include app-sidebar-theme($theme);
+  @include app-header-theme($theme);
+  @include app-data-distributor-box-theme($theme);
+  @include app-switch-text-theme($theme);
+}
+

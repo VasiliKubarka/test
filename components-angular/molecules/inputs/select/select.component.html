@@ -1,0 +1,40 @@
+<mat-form-field [formGroup]="formGroup"
+                fxFlex>
+
+  <mat-select [placeholder]="placeholder + (required ? ' *' : '')"
+              [formControlName]="name"
+              [matTooltip]="toolTip"
+              i18n-matTooltip="tooltip"
+              [multiple]="multiple"
+              (selectionChange)='valueChanged($event.value)'
+              [errorStateMatcher]="matcher">
+    <div (click)="$event.stopPropagation();"
+         class="search-menu">
+      <div class="search">
+        <input matInput
+               placeholder="Search"
+               id="search"
+               [ngModelOptions]="{standalone: true}"
+               [(ngModel)]="searchInput">
+        <svg-icon matSuffix
+                  src="assets/svg/close.svg"
+                  (click)="clearSearch()"></svg-icon>
+      </div>
+    </div>
+    <mat-option *ngIf="!multiple && !hideEmptyOption"
+                value="">Select
+    </mat-option>
+    <mat-option *ngFor="let option of filteredOptions"
+                [value]="option.value || option">
+      {{ option.label || option }}
+    </mat-option>
+  </mat-select>
+
+  <mat-error>
+    <app-input-errors [formGroup]="formGroup"
+                      [control]="control"
+                      [placeholder]="placeholder"
+                      [formErrors]="formErrors">
+    </app-input-errors>
+  </mat-error>
+</mat-form-field>

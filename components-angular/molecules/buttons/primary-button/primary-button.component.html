@@ -1,0 +1,7 @@
+<button [disabled]="disabled || loading" class="button" [ngClass]="shape"
+        mat-raised-button [color]="color" (click)="clickEvent.emit()">
+  <app-loader [loading]="loading">
+    <svg-icon *ngIf="!!iconLink" [src]="iconLink"></svg-icon>
+    <ng-content></ng-content>
+  </app-loader>
+</button>

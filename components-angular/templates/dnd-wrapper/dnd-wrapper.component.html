@@ -1,0 +1,11 @@
+<div *ngFor="let data of dataList; let i = index"
+     (dragstart)="dragStart($event, data)"
+     (dragenter)="dragEnter($event, data)"
+     (dragend)="dragEnd()"
+     (drop)="drop($event, data)"
+     (dragover)="dragOver($event, data)"
+     [draggable]="true">
+  <ng-container *ngTemplateOutlet="item; context: { data: data, index: i } "></ng-container>
+</div>
+
+<ng-content></ng-content>

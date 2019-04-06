@@ -1,0 +1,43 @@
+@import "~assets/styles/variables";
+
+.search-menu {
+  border-radius: 3px;
+
+  .search {
+    display: flex;
+    
+
+    input{
+      width: 100%;
+      margin: 8px 4px;
+      align-items: center;
+      border: 1px solid #ececec;
+      border-radius: 20px;
+      padding: 4px 12px;
+      background-color: #fff;
+    }
+    svg-icon {
+      width: 0;
+      fill: $border;
+      cursor: pointer;
+    }
+  }
+
+}
+
+.options {
+  border-top: 1px solid $border;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  height: 30px;
+
+  .mat-checkbox {
+    margin-left: 12px;
+  }
+
+}

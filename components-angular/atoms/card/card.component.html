@@ -1,0 +1,25 @@
+<div fxFlex fxLayout="column" class="app-card">
+    <div *ngIf="showImage"
+         (click)="clickImage.emit($event)"
+         fxFlex="190px" fxLayout class="image"
+         [ngStyle]="{'background-image': 'url(' + imageSrc + ')'}">
+    </div>
+    <button *ngIf="showMenuButton"
+            [matMenuTriggerFor]="menu">
+        <svg-icon src="assets/svg/more-option.svg"></svg-icon>
+    </button>
+    <div fxFlex="70px" fxLayout class="description-wrapper">
+        <div fxFlex fxLayout="column" class="description">
+            <app-text-truncate *ngIf="title">
+                <p class="lg title">{{ title }}</p>
+            </app-text-truncate>
+            <app-text-truncate *ngIf="description">
+                <p class="sm">{{ description }}</p>
+            </app-text-truncate>
+        </div>
+    </div>
+</div>
+
+<mat-menu #menu="matMenu">
+  <ng-container *ngTemplateOutlet="editMenu"></ng-container>
+</mat-menu>

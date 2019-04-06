@@ -1,0 +1,27 @@
+<div fxFlex
+     fxLayout="column"
+     class="avatar-wrapper"
+     (dragover)="onDragOver($event)"
+     [class.hovered]="hovered"
+     [class.editable]="editable">
+
+  <div class="image"
+       [ngStyle]="{'background-image': 'url(' + imageSrc + ')'}">
+  </div>
+  <label [for]="uniqueId"
+         class="upload"
+         (drop)="onDrop($event)"
+         (dragleave)="onDragLeave($event)">
+    <p i18n>Change Photo</p>
+  </label>
+
+  <span class='avatarError'>
+    <p class="sm">
+      <ng-container *ngTemplateOutlet="avatarError"></ng-container>
+    </p>
+  </span>
+  <input type="file"
+         accept=".jpg, .jpeg, .png"
+         (change)="onFileChange($event)"
+         [id]="uniqueId">
+</div>

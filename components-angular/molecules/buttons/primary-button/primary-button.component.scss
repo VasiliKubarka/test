@@ -1,0 +1,29 @@
+@import "~assets/styles/variables";
+
+button {
+  height: 40px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  font: $button_text;
+  color: $white;
+
+  box-shadow: none !important;
+  cursor: pointer;
+  outline: none;
+
+  svg-icon {
+    fill: $white;
+  }
+
+  &:disabled {
+    color: $warmGray !important;
+    background: $border !important;
+    pointer-events: none !important;
+  }
+
+  &.mat-primary {
+    svg-icon {
+      fill: $white;
+    }
+  }
+}

@@ -1,0 +1,167 @@
+<div fxFlex fxLayout="column" class="wrapper">
+  <div class="form-wrapper">
+
+    <form [formGroup]="filterForm" fxFlex>
+
+      <div *ngIf="loading" class="table-overlay">
+        <app-loader [loading]="true" diameter="lg"></app-loader>
+      </div>
+
+      <div *ngIf="showNoTableData" class="table-overlay">
+        <svg-icon src="assets/svg/no-data.svg"></svg-icon>
+        <h3 i18n>No data present</h3>
+      </div>
+
+      <div *ngIf="showNoMatchesFound" class="table-overlay">
+        <svg-icon src="assets/svg/no-data.svg"></svg-icon>
+        <h3 i18n>No matches found</h3>
+      </div>
+
+      <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows>
+
+        <ng-container *ngFor="let column of displayedColumnsData" [matColumnDef]="column.value">
+
+          <mat-header-cell *matHeaderCellDef fxLayout="column" fxLayoutAlign="flex-start">
+
+            <ng-container [ngSwitch]="column.control_type">
+
+              <ng-container *ngSwitchCase="'select'">
+                <mat-checkbox *ngIf="selectedItems"
+                              (change)="toggleSelectAllButton($event)"
+                              [checked]="allValuesSelected">
+                </mat-checkbox>
+              </ng-container>
+
+              <ng-container *ngSwitchDefault>
+                <div fxFlex
+                     fxLayoutAlign="flex-start center"
+                     class="title-container"
+                     mat-sort-header
+                     [disabled]="disableSortingForCurrentColumn(column)">
+                  <app-text-truncate>
+                    <p class="sm bold">{{ column.label }}</p>
+                  </app-text-truncate>
+                </div>
+                <div fxFlex class="filter" [ngSwitch]="column.control_type">
+
+                  <ng-container *ngSwitchCase="'textbox'">
+                    <input matInput
+                           class="textbox"
+                           placeholder="&#xe900;"
+                           [formControlName]="column.value">
+                    <svg-icon matSuffix
+                              *ngIf="!!filterForm.get(column.value).value"
+                              src="assets/svg/close.svg"
+                              (click)="removeFilter(column.value)">
+                    </svg-icon>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'datepicker'">
+                    <input matInput
+                           [formControlName]="column.value"
+                           [matDatepicker]="picker"
+                           i18n-placeholder="placeholder"
+                           placeholder="Select Date"
+                           readonly>
+                    <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'dropdown'">
+                    <mat-select placeholder="Select"
+                                i18n-placeholder="placeholder"
+                                [formControlName]="column.value"
+                                multiple>
+                      <mat-option *ngFor="let option of getColumnOptions(column.value)" [value]="option">
+                        {{ option }}
+                      </mat-option>
+                    </mat-select>
+                  </ng-container>
+
+                  <ng-container *ngSwitchDefault="">
+                    <ng-container *ngIf="column.value === columnNameWithClearAllFilter">
+                      <button class="clear-all-text" (click)="resetFilters()" mat-button>
+                        <p class="sm bold primary-color" i18n>Clear all</p>
+                      </button>
+                    </ng-container>
+                  </ng-container>
+
+                </div>
+              </ng-container>
+
+            </ng-container>
+
+          </mat-header-cell>
+
+          <mat-cell *matCellDef="let element">
+            <div class="cell-content">
+
+              <ng-container *ngIf="getFieldTemplate(column.value); else default">
+                <ng-container
+                  *ngTemplateOutlet="getFieldTemplate(column.value); context: {columnData: column, value: element[column.value], rowData: element}"></ng-container>
+              </ng-container>
+
+              <ng-template #default>
+
+                <ng-container [ngSwitch]="column.value">
+                  <ng-container *ngSwitchCase="'select'">
+                    <mat-checkbox *ngIf="selectedItems"
+                                  (change)="selectedItems?.toggle(element)"
+                                  [checked]="selectedItems?.isSelected(element)">
+                    </mat-checkbox>
+                  </ng-container>
+
+                  <app-text-truncate *ngSwitchDefault>
+                    <p class="sm" [ngSwitch]="column.control_type">
+                      <ng-container *ngSwitchCase="'datepicker'">
+                        {{ element[column.value] | date:'MMMM d, yyyy' }}
+                      </ng-container>
+                      <ng-container *ngSwitchDefault>{{ element[column.value] }}</ng-container>
+                    </p>
+                  </app-text-truncate>
+                </ng-container>
+
+              </ng-template>
+
+            </div>
+
+          </mat-cell>
+
+        </ng-container>
+
+        <ng-container matColumnDef="expandedDetail">
+          <mat-cell *matCellDef="let rowData" fxLayout="column">
+            <ng-container *ngIf="shouldDisplayExpandedRow(rowData)">
+              <div class="top-divider"></div>
+              <ng-container
+                *ngTemplateOutlet="getFieldTemplate('expandedDetail'); context: {rowData: rowData}"></ng-container>
+            </ng-container>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"
+                 [class.default-row_expanded]="shouldDisplayExpandedRow(row)"
+                 [ngClass]="uniqueClassNameFunction && uniqueClassNameFunction(row)"
+                 class="default-row"
+                 (click)="clickRow.emit(row)">
+        </mat-row>
+
+        <mat-row *matRowDef="let row; columns: ['expandedDetail']"
+                 [class.detail-row_expanded]="shouldDisplayExpandedRow(row)"
+                 class="detail-row">
+        </mat-row>
+      </table>
+    </form>
+
+  </div>
+
+  <ng-content *ngIf="listActionsComponent" select="app-common-list-actions"></ng-content>
+
+
+  <mat-paginator [pageSizeOptions]="paginatorOptions"
+                 showFirstLastButtons
+                 [hidden]="!showPaginator">
+  </mat-paginator>
+
+</div>
